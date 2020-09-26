@@ -1,6 +1,6 @@
 # https://github.com/GuillermoTafoya
 # My objective is to create my own library for data structures 
-# in python and make n example of a practical use for each type.
+# in python and make an example of a practical use for each type.
 import gc
 
 class SinglyLinkedList:
@@ -536,6 +536,10 @@ class Stack():
     def peek(self):
         return self._methods.head.data
 
+    def empty(self):
+        self._methods.deleteList()
+        self.size = self._methods.size
+
 class Queue():
     def __init__(self):
         self._methods = SinglyLinkedList()
@@ -569,19 +573,147 @@ class Queue():
     def peek(self):
         return self._methods.head.data
 
-class binTree():
-    class node:
+    def empty(self):
+        self._methods.deleteList()
+        self.size = self._methods.size
 
-        def __init__(nodeSelf, Data, Left, Right):
+class binTree():
+
+    class node:
+        def __init__(nodeSelf, Data, Left = None, Right = None):
             nodeSelf.data = Data
             nodeSelf.left = Left
             nodeSelf.right = Right
-    
-    def __init__(self):
-        self.size = 0
-        self.root = None
 
-class
+    def __init__(self, Data):
+        self.size = 0
+        self.root = self.node(Data)
+        self._methods = Queue()
+
+    def addRoot(self, Data):
+        if self.root is None:
+            self.root = self.node(Data)
+        else: 
+            return False
+
+    def height(self, node):
+        if node is None:
+            return 0
+        else:
+            lheight = self.height(node.left)
+            rheight = self.height(node.right)
+
+            if lheight > rheight:
+                return lheight+1
+            else:
+                return rheight+1
+
+    def addLeft(self, Data, node=None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                addRoot(Data)
+                return
+        else:
+            pointer = node
+        
+        if pointer.left is None:
+            pointer.left = self.node(Data)
+        else:
+            return False
+
+    def travelLeft(self, iterator = 1, node = None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                return False
+        else:
+            pointer = node
+
+        for i in range(iterator):
+            if pointer.left is not None:
+                pointer = pointer.left
+            else:
+                return False
+        return pointer
+
+    def travelAllLeft(self, node = None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                return False
+        else:
+            pointer = node
+        
+        while pointer.left is not None:
+            pointer = pointer.left
+        return pointer
+
+    def addRight(self, Data, node=None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                addRoot(Data)
+                return
+        else:
+            pointer = node
+
+        if pointer.right is None:
+            pointer.right = self.node(Data)
+        else:
+            return False
+
+    def travelRight(self, iterator=1, node=None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                return False
+        else:
+            pointer = node
+
+        for i in range(iterator):
+            if pointer.right is not None:
+                pointer = pointer.right
+            else:
+                return False
+        return pointer
+
+    def travelAllRight(self, node=None):
+        if node is None:
+            pointer = self.root
+            if pointer is None:
+                return False
+        else:
+            pointer = node
+
+        while pointer.right is not None:
+            pointer = pointer.right
+        return pointer
+
+    def printLevelOrder(self,  node=None):
+
+        self._methods.empty()
+
+        if node is None:
+            print("1")
+            if self.root is not None:
+                self._methods.add(self.root)
+        else:
+            print(node)
+            self._methods.add(node)
+
+        while not self._methods.isEmpty():
+
+            pointer = self._methods.peek()
+
+            if self._methods.peek().left is not None:
+                self._methods.add(self._methods.peek().left)
+
+            if self._methods.peek().right is not None:
+                self._methods.add(self._methods.peek().right)
+
+            print(self._methods.poll().data, end = " ")
+
 """
 class PriorityQueue():
     def __init__(self):
