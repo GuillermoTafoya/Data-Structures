@@ -100,9 +100,9 @@ class SinglyLinkedList:
         """
         pointer = self.search(element, arg)
         if pointer is not False:
-            if pointer == self.head:
+            if pointer is self.head:
                 self.deleteFirst()
-            elif pointer == self.tail:
+            elif pointer is self.tail:
                 self.deleteLast()
             else:
                 data = pointer.data
@@ -354,9 +354,9 @@ class DoublyLinkedList:
     def searchDel(self, arg="", element=""):
         pointer = self.search(element, arg)
         if pointer is not False:
-            if pointer == self.head:
+            if pointer is self.head:
                 self.deleteFirst()
-            elif pointer == self.tail:
+            elif pointer is self.tail:
                 self.deleteLast()
             else:
                 pointer.prev.next = pointer.next
@@ -580,21 +580,27 @@ class Queue():
 class binTree():
 
     class node:
-        def __init__(nodeSelf, Data, Left = None, Right = None):
+        def __init__(nodeSelf, Key, Data = None, Left = None, Right = None, Prev = None):
+            nodeSelf.key = Key
             nodeSelf.data = Data
             nodeSelf.left = Left
             nodeSelf.right = Right
+            nodeSelf.prev = Prev
 
-    def __init__(self, Data):
-        self.size = 0
-        self.root = self.node(Data)
+    def __init__(self, Key, Data = None):
+        self.size = 1
+        self.root = self.node(Key, Data)
         self._methods = Queue()
 
-    def addRoot(self, Data):
+    def addRoot(self, Key, Data = None):
         if self.root is None:
-            self.root = self.node(Data)
+            self.root = self.node(Key, Data)
+            self.size += 1
         else: 
             return False
+
+    def isEmpty(self):
+        return self.size == 0
 
     def height(self, node):
         if node is None:
@@ -608,21 +614,35 @@ class binTree():
             else:
                 return rheight+1
 
-    def addLeft(self, Data, node=None):
+    def addLeft(self, Key, node = None, Data = None):
+        """
+        Adds a node to the left of the specified node.
+        The default node is the tree's root
+        Returns false if the specified node already has a left node.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
-                addRoot(Data)
+                addRoot(Key, Data)
                 return
         else:
             pointer = node
         
         if pointer.left is None:
-            pointer.left = self.node(Data)
+            pointer.left = self.node(Key, Data)
+            pointer.left.prev = pointer
+            pointer = None
+            gc.collect()
+            self.size += 1
         else:
             return False
 
     def travelLeft(self, iterator = 1, node = None):
+        """
+        Returns a node n times to the left of the specified node.
+        The default node is the tree's root.
+        Returns False if there aro not enough nodes to travel.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
@@ -638,6 +658,10 @@ class binTree():
         return pointer
 
     def travelAllLeft(self, node = None):
+        """
+        Returns the node that is to the most left of the specified node.
+        The default node is the tree's root.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
@@ -649,21 +673,35 @@ class binTree():
             pointer = pointer.left
         return pointer
 
-    def addRight(self, Data, node=None):
+    def addRight(self, Key, node=None, Data=None):
+        """
+        Adds a node to the right of the specified node.
+        The default node is the tree's root
+        Returns false if the specified node already has a right node.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
-                addRoot(Data)
+                addRoot(Key, Data)
                 return
         else:
             pointer = node
 
         if pointer.right is None:
-            pointer.right = self.node(Data)
+            pointer.right = self.node(Key, Data)
+            pointer.right.prev = pointer
+            pointer = None
+            gc.collect()
+            self.size += 1
         else:
             return False
 
     def travelRight(self, iterator=1, node=None):
+        """
+        Returns a node n times to the right of the specified node.
+        The default node is the tree's root.
+        Returns False if there aro not enough nodes to travel.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
@@ -679,6 +717,10 @@ class binTree():
         return pointer
 
     def travelAllRight(self, node=None):
+        """
+        Returns the node that is to the most right of the specified node.
+        The default node is the tree's root.
+        """
         if node is None:
             pointer = self.root
             if pointer is None:
@@ -690,17 +732,157 @@ class binTree():
             pointer = pointer.right
         return pointer
 
-    def printLevelOrder(self,  node=None):
-
+    def printLevelOrderTraversal(self, arg = ".key", node = None):
+        """
+        The method will print all nodes (taking a specified node as the root) in level order.
+        The default node is the tree's root.
+        The default argument to print is the key, but another can be specified as a string (for example ".data.name").
+        """
         self._methods.empty()
 
         if node is None:
-            print("1")
             if self.root is not None:
                 self._methods.add(self.root)
+            else:
+                return False
         else:
-            print(node)
             self._methods.add(node)
+
+        level = Queue()
+        levelTracker = 1
+        levelRequirements = 1
+        level.add(self._methods.peek())
+
+        while not self._methods.isEmpty():
+            
+            #Print Level
+            if levelRequirements == levelTracker:
+                levelRequirements = 0
+                for i in range(levelTracker):
+                    print(eval("level.peek()" + arg), end = " ")
+                
+    
+                    if level.peek().left is not None:
+                        levelRequirements += 1
+                        level.add(level.peek().left)
+
+                    if level.peek().right is not None:
+                        levelRequirements += 1
+                        level.add(level.peek().right)
+                    
+                    level.poll()
+                    gc.collect()
+                levelTracker = 0
+                print("")
+
+            if self._methods.peek().left is not None:
+                self._methods.add(self._methods.peek().left)
+            if self._methods.peek().right is not None:
+                self._methods.add(self._methods.peek().right)
+            self._methods.poll()
+            levelTracker += 1
+
+    def getLevel(self, Level = 0, node = None):
+        """
+        The method will return all nodes (from left to rigth) in a level as a tupple (taking a specified node as the root).
+        The default node is the tree's root.
+        The default level, that is also the root level, is 0.
+        Returns false if the specified level does not exist.
+        """
+        self._methods.empty()
+
+        if node is None:
+            if self.root is not None:
+                self._methods.add(self.root)
+            else:
+                return False
+        else:
+            self._methods.add(node)
+
+        level = Queue()
+        levelTracker = 1
+        levelRequirements = 1
+        level.add(self._methods.peek())
+        currentLevel = 0
+        while not self._methods.isEmpty():
+
+            #Level
+            if levelRequirements == levelTracker:
+                
+                levelRequirements = 0
+                #Get rid of previous level while getting the new one.
+                for i in range(levelTracker):
+
+                    if level.peek().left is not None:
+                        levelRequirements += 1
+                        level.add(level.peek().left)
+
+                    if level.peek().right is not None:
+                        levelRequirements += 1
+                        level.add(level.peek().right)
+
+                    level.poll()
+
+                currentLevel += 1
+
+                if currentLevel == Level:
+                    gc.collect()
+                    return level
+                levelTracker = 0
+
+            if self._methods.peek().left is not None:
+                self._methods.add(self._methods.peek().left)
+            if self._methods.peek().right is not None:
+                self._methods.add(self._methods.peek().right)
+            self._methods.poll()
+            levelTracker += 1
+        return False
+
+    def deepSearch(self, element, arg = ".key", node = None):
+        """
+        The method will search for a given element in all nodes (taking a specified node as the root) and return the node (or False if it's not contained).
+        The default node is the tree's root.
+        The default argument is the key, but another can be specified as a string (for example ".data.name").
+        Returns false if the specified level does not exist.
+        """
+        self._methods.empty()
+
+        if node is None:
+            if self.root is not None:
+                self._methods.add(self.root)
+            else:
+                return False
+        else:
+            self._methods.add(node)
+
+        while not self._methods.isEmpty():
+
+            if self._methods.peek().left is not None:
+                self._methods.add(self._methods.peek().left)
+
+            if self._methods.peek().right is not None:
+                self._methods.add(self._methods.peek().right)
+
+            if eval("self._methods.peek()" + arg) == element:
+                return self._methods.poll()
+            self._methods.poll()
+
+        return False
+
+    def deepestNode(self, Node = None):
+        """
+        The method will search for the deepest of all nodes (taking a specified node as the root) and return the node.
+        The default node is the tree's root.
+        """
+        self._methods.empty()
+
+        if Node is None:
+            if self.root is not None:
+                self._methods.add(self.root)
+            else:
+                return False
+        else:
+            self._methods.add(Node)
 
         while not self._methods.isEmpty():
 
@@ -712,7 +894,82 @@ class binTree():
             if self._methods.peek().right is not None:
                 self._methods.add(self._methods.peek().right)
 
-            print(self._methods.poll().data, end = " ")
+            if self._methods.size > 1:
+                self._methods.poll()
+            else:
+                return self._methods.poll()
+
+    def delete(self, Node = None):
+        """
+        The method will delete the specified node and replace it with the deepest node.
+        If one of the deepest node is being deleted, it is not replaced with anything.
+        The default node is the tree's root.
+        """
+        
+        if Node is None:
+            if self.root is not None:
+                node = self.root
+            else: 
+                return False
+        else:
+            node = Node
+
+        if self.size == 1:
+            self.root = None
+            gc.collect()
+            self.size -= 1
+            return
+
+        pointer = self.deepestNode(node)
+        node.key = pointer.key
+        node.data = pointer.data
+        
+        if pointer.prev.right is pointer:
+            pointer.prev.right = None
+        else:
+            pointer.prev.left = None
+        pointer = None
+        self.size -= 1
+        gc.collect()
+
+    def deleteTree(self):
+            """
+            Deletes the tree.
+            """
+            if self.isEmpty():
+                return
+
+            self._methods.empty()
+
+            self._methods.add(self.root)
+
+            while not self._methods.isEmpty():
+
+                if self._methods.peek().left is not None:
+                    self._methods.add(self._methods.peek().left)
+
+                if self._methods.peek().right is not None:
+                    self._methods.add(self._methods.peek().right)
+
+                pointer = self._methods.poll()
+
+                if pointer is self.root:
+                    continue
+                elif pointer.prev.right is pointer:
+                    pointer.prev.right = None
+                else:
+                    pointer.prev.left = None
+                gc.collect()
+
+            self.root = None
+            self.size = 0
+            pointer = None
+            gc.collect()
+            return
+
+            
+            
+            
 
 """
 class PriorityQueue():
