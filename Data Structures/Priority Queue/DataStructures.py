@@ -969,12 +969,12 @@ class binTree():
 
 class BinarySearchTree():
     def __init__(self, Key, Data = None):
-        self._methods = binTree(Key, data)
-        self.size = self._methods.size
+        self._tree = binTree(Key, Data)
+        self.size = self._tree.size
 
     def addRoot(self, Key, Data = None):
-        self._methods.addRoot(Key, Data)
-        self.size = self._methods.size
+        self._tree.addRoot(Key, Data)
+        self.size = self._tree.size
 
     def add(self, Key, Data = None, _Node = None):
         """
@@ -985,25 +985,25 @@ class BinarySearchTree():
             return
 
         if _Node is None:
-            pointer = self.root
+            pointer = self._tree.root
 
         while True:
 
             if Key <= pointer.key:
                 if pointer.left is None:
-                    self._methods.addLeft(Key, pointer, Data)
+                    self._tree.addLeft(Key, pointer, Data)
                     return
                 else:
                     pointer = pointer.left
-            elif Kef > pointer.key:
+            elif Key > pointer.key:
                 if pointer.right is None:
-                    self._methods.addRightt(Key, pointer, Data)
+                    self._tree.addRight(Key, pointer, Data)
                     return
                 else:
-                    pointer = pointer.left
+                    pointer = pointer.right
 
     def printLevelOrderTraversal(self):
-        self._methods.printLevelOrderTraversal()
+        self._tree.printLevelOrderTraversal()
 
 """
 class PriorityQueue():
