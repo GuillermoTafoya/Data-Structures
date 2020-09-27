@@ -967,9 +967,43 @@ class binTree():
             gc.collect()
             return
 
-            
-            
-            
+class BinarySearchTree():
+    def __init__(self, Key, Data = None):
+        self._methods = binTree(Key, data)
+        self.size = self._methods.size
+
+    def addRoot(self, Key, Data = None):
+        self._methods.addRoot(Key, Data)
+        self.size = self._methods.size
+
+    def add(self, Key, Data = None, _Node = None):
+        """
+        Adds a not in the correct position given a priority key.
+        """
+        if self.size == 0:
+            self.addRoot(Key, Data)
+            return
+
+        if _Node is None:
+            pointer = self.root
+
+        while True:
+
+            if Key <= pointer.key:
+                if pointer.left is None:
+                    self._methods.addLeft(Key, pointer, Data)
+                    return
+                else:
+                    pointer = pointer.left
+            elif Kef > pointer.key:
+                if pointer.right is None:
+                    self._methods.addRightt(Key, pointer, Data)
+                    return
+                else:
+                    pointer = pointer.left
+
+    def printLevelOrderTraversal(self):
+        self._methods.printLevelOrderTraversal()
 
 """
 class PriorityQueue():
