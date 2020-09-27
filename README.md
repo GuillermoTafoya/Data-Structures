@@ -1,8 +1,8 @@
 # Data Structures
- Contains:\n
+ ##Contains:
  
- Singly Linked List\n
- Doubly Linked List\n
- Stack\n
- Queue\n
- Binary Tree (binTree)
+ ###Singly Linked List
+ ###Doubly Linked List
+ ###Stack
+ ###Queue
+ ###Binary Tree (binTree)
