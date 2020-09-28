@@ -577,7 +577,7 @@ class Queue():
         self._methods.deleteList()
         self.size = self._methods.size
 
-class binTree():
+class BinaryTree():
 
     class node:
         def __init__(nodeSelf, Key, Data = None, Left = None, Right = None, Prev = None):
@@ -969,16 +969,19 @@ class binTree():
 
 class BinarySearchTree():
     def __init__(self, Key, Data = None):
-        self._tree = binTree(Key, Data)
+        self._tree = BinaryTree(Key, Data)
         self.size = self._tree.size
+        self.root = self._tree.root
 
     def addRoot(self, Key, Data = None):
         self._tree.addRoot(Key, Data)
         self.size = self._tree.size
+        self.root = self._tree.root
 
     def add(self, Key, Data = None, _Node = None):
         """
         Adds a not in the correct position given a priority key.
+        Returns False if there is already a key with that value.
         """
         if self.size == 0:
             self.addRoot(Key, Data)
@@ -989,21 +992,45 @@ class BinarySearchTree():
 
         while True:
 
-            if Key <= pointer.key:
+            if Key < pointer.key:
                 if pointer.left is None:
                     self._tree.addLeft(Key, pointer, Data)
+                    self.size = self._tree.size
                     return
                 else:
                     pointer = pointer.left
             elif Key > pointer.key:
                 if pointer.right is None:
                     self._tree.addRight(Key, pointer, Data)
+                    self.size = self._tree.size
                     return
                 else:
                     pointer = pointer.right
+            else:
+                return False
 
     def printLevelOrderTraversal(self):
         self._tree.printLevelOrderTraversal()
+
+    def search(self, Key):
+        """
+        Performs binary search with a given key.
+        Returns false if the key is not in the tree.
+        """
+        pointer = self.root
+        while True:
+            if Key == pointer.key:
+                return pointer
+            elif Key <= pointer.key:
+                if pointer.left is None:
+                    return False
+                pointer = pointer.left
+            else:
+                if pointer.right is None:
+                    return False
+                pointer = pointer.right
+        return False
+
 
 """
 class PriorityQueue():

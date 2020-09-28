@@ -1,6 +1,6 @@
-from DataStructures import binTree
+from DataStructures import BinaryTree
 
-pine = binTree(25)
+pine = BinaryTree(25)
 pine.addLeft(20)
 pine.addLeft(10, pine.root.left)
 
