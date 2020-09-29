@@ -578,7 +578,10 @@ class Queue():
         self.size = self._methods.size
 
 class BinaryTree():
-
+    """
+    Binary tree implementation.
+    To initialize, it needs a root.
+    """
     class node:
         def __init__(nodeSelf, Key, Data = None, Left = None, Right = None, Prev = None):
             nodeSelf.key = Key
@@ -968,17 +971,29 @@ class BinaryTree():
             return
 
 class BinarySearchTree():
+    """
+    Binary search tree implementation using a binary tree.
+    To initialize, it needs a root.
+    It is NOT a self balancing tree.
+    
+    """
     def __init__(self, Key, Data = None):
         self._tree = BinaryTree(Key, Data)
         self.size = self._tree.size
         self.root = self._tree.root
+
+    def deleteTree(self):
+        """
+        Deletes the tree.
+        """
+        self._tree.deleteTree()
 
     def addRoot(self, Key, Data = None):
         self._tree.addRoot(Key, Data)
         self.size = self._tree.size
         self.root = self._tree.root
 
-    def add(self, Key, Data = None, _Node = None):
+    def add(self, Key, Data = None):
         """
         Adds a not in the correct position given a priority key.
         Returns False if there is already a key with that value.
@@ -986,9 +1001,7 @@ class BinarySearchTree():
         if self.size == 0:
             self.addRoot(Key, Data)
             return
-
-        if _Node is None:
-            pointer = self._tree.root
+        pointer = self._tree.root
 
         while True:
 
@@ -1009,8 +1022,51 @@ class BinarySearchTree():
             else:
                 return False
 
+    def deepestNode(self, Node = None):
+        """
+        The method will search for the deepest of all nodes (taking a specified node as the root) and return the node.
+        The default node is the tree's root.
+        """
+        return self._tree.deepestNode(Node)
+
     def printLevelOrderTraversal(self):
+        """
+        The method will print all nodes (taking a specified node as the root) in level order. 
+        The default node is the tree's root. 
+        The default argument to print is the key, but another can be specified as a string 
+        (for example ".data.name").
+        """
         self._tree.printLevelOrderTraversal()
+
+    def travelLeft(self, iterator = 1, Node = None):
+        """
+        Returns a node n times to the left of the specified node.
+        The default node is the tree's root.
+        Returns False if there aro not enough nodes to travel.
+        """
+        return self._tree.travelLeft(iterator, Node)
+
+    def travelAllLeft(self, Node = None):
+        """
+        Returns the node that is to the most left of the specified node.
+        The default node is the tree's root.
+        """
+        return self._tree.travelAllLeft(Node)
+
+    def travelRight(self, iterator=1, Node = None):
+        """
+        Returns a node n times to the right of the specified node.
+        The default node is the tree's root.
+        Returns False if there aro not enough nodes to travel.
+        """
+        return self._tree.travelRight(iterator, Node)
+
+    def travelAllRight(self, Node = None):
+        """
+        Returns the node that is to the most right of the specified node.
+        The default node is the tree's root.
+        """
+        return self._tree.travelAllRight(Node)
 
     def search(self, Key):
         """
@@ -1031,6 +1087,97 @@ class BinarySearchTree():
                 pointer = pointer.right
         return False
 
+    def delete(self, Node = None):
+        """
+        The method will delete the specified node while keeping the treem in order.
+        The default node to delete is the tree's root.
+        """
+        if Node is None:
+            Node = self.root
+            pointer = Node
+            if pointer is None:
+                return False
+        else:
+            pointer = Node
+
+        #Is leaf
+        if Node.left is None and Node.right is None:
+            if Node.prev.right is Node:
+                Node.prev.right = None
+            else:
+                Node.prev.left = None
+            pointer = None
+            gc.collect()
+            self._tree.size -= 1
+            self.size = self._tree.size
+            return
+
+        #Is root
+        if Node == self.root:
+            if pointer.left is not None:
+                if pointer.right is not None:
+                    temp = self.travelAllRight(pointer.left)
+                    pointer.right.prev = temp
+                    temp.right = pointer.right
+                self._tree.root = pointer.left
+                self.root = self._tree.root
+                pointer.left.prev = None
+
+            else:
+                self._tree.root = pointer.right
+                self.root = self._tree.root
+                pointer.right.prev = None
+
+            pointer = None
+            gc.collect()
+            self._tree.size -= 1
+            self.size = self._tree.size
+            return
+
+        #Else
+        if pointer.prev.right is pointer:
+            if pointer.left is not None:
+                if pointer.left.right is not None:
+                    temp = self.travelAllRight(pointer.left.right)
+                    Node.right.prev = temp
+                    temp.right = Node.right
+                    temp = None
+                else:
+                    Node.right.prev = pointer.left.right
+                    pointer.left.right = Node.right
+                Node.prev.right = pointer.left
+
+            else:
+                Node.prev.right = Node.right
+        else:
+            if pointer.right is not None:
+                if pointer.right.left is not None:
+                    temp = self.travelAllLeft(pointer.right.left)
+                    Node.left.prev = temp
+                    temp.left = Node.left
+                    temp = None
+                else:
+                    Node.left.prev = pointer.right.left
+                    pointer.right.left = Node.left
+                Node.prev.left = pointer.right
+            else:
+                Node.prev.left = Node.left
+
+        pointer = None
+        gc.collect()
+        self._tree.size -= 1
+        self.size = self._tree.size
+        return
+
+
+class RBtree():
+    pass
+
+class AVLtree():
+    pass
+
+class SplayTree():
+    pass
 
 """
 class PriorityQueue():

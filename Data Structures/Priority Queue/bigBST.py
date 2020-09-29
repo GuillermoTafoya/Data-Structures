@@ -11,8 +11,9 @@ hugeOak.printLevelOrderTraversal()
 print("Size:" , hugeOak.size)
 
 print("Outer Left: ")
-for i in range(1, hugeOak.height(hugeOak.root.left)+1):
-    print(hugeOak.travelLeft(i).key)
+
+print(hugeOak.travelAllLeft().key)
+
 print("Outer Right: ")
-for i in range(1, hugeOak.height(hugeOak.root.right)+1):
-    print(hugeOak.travelRight(i).key)
+
+print(hugeOak.travelAllRight().key)
