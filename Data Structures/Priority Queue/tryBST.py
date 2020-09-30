@@ -29,6 +29,8 @@ print(searchPine.travelAllLeft().key)
 print("Outer Right: ")
 print(searchPine.travelAllRight().key)
 
+print("Closest key:" , searchPine.searchClosestKey(17))
+
 print("_"*20)
 print("After delete:")
 
@@ -41,3 +43,6 @@ print("_"*20)
 searchPine.delete()
 
 searchPine.printLevelOrderTraversal()
+
+print("_"*20)
+

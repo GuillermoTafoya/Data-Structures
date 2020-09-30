@@ -1169,6 +1169,35 @@ class BinarySearchTree():
         self.size = self._tree.size
         return
 
+    def searchClosestKey(self, target, Node = None):
+        """
+        The method will search and return the node with the closest key to the specified key.
+        The default node to start searching is the tree's root.
+        """
+        if Node is None:
+            Node = self.root
+            pointer = Node
+            if pointer is None:
+                return False
+        else:
+            pointer = Node
+
+        difference = abs(target - pointer.key)
+        closest = pointer
+        while pointer is not None:
+            if target < pointer.key:
+                if abs(target - pointer.key) < difference:
+                    difference = abs(target - pointer.key)
+                    closest = pointer
+                pointer = pointer.left
+            elif target > pointer.key:
+                if abs(target - pointer.key) < difference:
+                    difference = abs(target - pointer.key)
+                    closest = pointer
+                pointer = pointer.right
+            elif target == pointer.key:
+                return pointer
+        return closest
 
 class RBtree():
     pass
